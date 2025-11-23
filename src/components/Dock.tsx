@@ -1,11 +1,28 @@
 import { dockApps } from "#constants/index";
+import useWindowStore from "#store/window";
 import { useRef } from "react";
 import { Tooltip } from "react-tooltip";
 
+interface DockApp {
+  id: string;
+  name: string;
+  icon: string;
+  canOpen: boolean;
+}
+
 const Dock = () => {
+  const { openWindow, closeWindow, windows } = useWindowStore();
   const dockRef = useRef<HTMLDivElement>(null);
-  const toggleApp = (app) => {
-    // TODO implement open window logic
+
+  const toggleApp = (app: DockApp) => {
+    if (!app.canOpen) return;
+    const window = windows[app.id];
+    if (window.isOpen) {
+      closeWindow(app.id);
+    } else {
+      openWindow(app.id);
+    }
+    console.log(windows);
   };
   return (
     <section id="dock">
